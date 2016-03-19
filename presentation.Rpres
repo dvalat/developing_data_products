@@ -1,0 +1,105 @@
+Motor Trend Car Road Tests Dataset Interactive Analysis
+========================================================
+author: VALAT Didier
+date: 19/03/2016
+autosize: true
+transition: rotate
+css: presentation.css
+
+<medium>
+Coursera Course Project - Developing Data Products
+</medium>
+
+Description
+========================================================
+incremental: true
+type: prompt
+
+<font size="6">
+This presentation is based on **MT cars** data set which has been used to create an interactive shiny application.
+
+The shiny application is available here: <https://dvalat.shinyapps.io/Developing_Data_Products_CP/>
+
+The application is composed of:
+- Navigation tabs 
+![Tab Analysis](presentation-figure/tab1.png)
+![Tab Information](presentation-figure/tab2.png)
+which allow users to navigate between the analysis and information pages.
+- A checkbox list of cars with select buttons
+![Select buttons](presentation-figure/select.png) in order to clear or select all the data set cars.
+- But also, graphics and data tabs 
+![Tab Graphs](presentation-figure/tab3.png)
+![Tab Data](presentation-figure/tab4.png)
+which are the "heart" of the application.
+</font>
+
+Analysis 1/3
+========================================================
+type: prompt
+
+<font size="6">
+For this analysis, I decided to produce 3 kinds of graphics (***move the mouse over the icons to display an overview of each***):
+<ul class="enlarge">
+<li><img src="presentation-figure/chart_scatter.png" alt="Scatter Chart" /><span><img src="presentation-figure/graph1.png" alt="Scatter Chart Large"/>-------------------------------------------------------------</span>
+</li>
+this graph allow the user to compare the weight and milles per Gallon for each cylinders.
+</ul>
+<ul class="enlarge">
+<li><img src="presentation-figure/chart_line.png" alt="Line Chart" /><span><img src="presentation-figure/graph2.png" alt="Line Chart Large"/>-------------------------------------------------------------</span>
+</li>
+ this graph allow the user to compare the gross horsepower and milles per Gallon for each transmission type.
+</ul>
+<ul class="enlarge">
+<li><img src="presentation-figure/chart_pie.png" alt="Pie Chart" /><span><img src="presentation-figure/graph3.png" alt="Pie Chart Large"/>-----------------------------------------------</span>
+</li>
+ this graph allow the user to compare the number of cars for each tranmission type.
+</ul>
+</font>
+
+Analysis 2/3
+========================================================
+type: prompt
+
+<font size="5">
+I will now load some packages and initialize a Scatter chart object to make this presentation a little more interactive.
+
+```{r setup, cache = F, echo=FALSE}
+# Required package and options for rCharts
+require(knitr)
+opts_chunk$set(results = "asis", comment = NA, tidy = F)
+```
+```{r create, tidy = F}
+# rCharts package loading, it needs to be isolated from other packages
+library(rCharts)
+```
+```{r}
+# Other package for data transformations
+library(data.table)
+# Load the dataset and ddd "brands" column to the data set
+ds<-data.table(brands=rownames(mtcars),mtcars)
+# Recode transmission variable
+ds$am<-ifelse(ds$am==0,"Automatic","Manual")
+
+# Create the Scatter chart
+p3<-nPlot(mpg~wt, group='cyl', data=ds, type = "scatterChart")
+p3$chart(tooltipContent = "#! function(key, x, y, e){
+	return '<h3>' + e.point.brands + '</h3>'} !#")
+p3$xAxis(axisLabel='Weight (in lb)')
+p3$yAxis(axisLabel='Miles/(US) gallon')
+```
+</font>
+
+Analysis 3/3
+========================================================
+
+<font size="4">The following graph is an extract from my shiny application. The aim was to include **rCharts** functionnalities into ```R Presenter``` .
+
+```{r}
+p3$show('iframesrc', cdn = TRUE) # Display the Scatter chart
+```
+
+<div align="center">Thank you for reading this presentation and I hope you will enjoy <a href="https://dvalat.shinyapps.io/Developing_Data_Products_CP/">my application</a>!</div>
+<div align="center">If you want to keep in touch with me:</div>
+<div align="center"><a href="https://twitter.com/big_data_flow" alt="Big Data Flow"><img src="presentation-figure/twitter.png"></a>&nbsp;&nbsp;&nbsp;
+<a href="https://fr.linkedin.com/in/didiervalat" alt="LinkedIn Didier VALAT"><img src="presentation-figure/linkedin.png"></a></div>
+</font>
